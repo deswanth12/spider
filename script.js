@@ -30,11 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const boltGlow = document.getElementById('boltGlow');
 
   function generateLightningPath() {
-    let x = Math.random() * 800 + 100;
+    let x = Math.random() * (window.innerWidth || 800);
     let y = 0;
     let path = `M ${x} ${y}`;
     
-    while (y < 900) {
+    while (y < window.innerHeight) {
       x += (Math.random() - 0.5) * 90;
       y += Math.random() * 60 + 30;
       path += ` L ${x} ${y}`;
@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /* ════════════ 7. WEB SHOOTING CANVAS PHYSICS ════════════ */
+  /* ════════════ 7. WEB SHOOTING CANVAS PHYSICS (MOUSE + MOBILE TOUCH) ════════════ */
   const webCanvas = document.getElementById('webCanvas');
   const webCtx = webCanvas.getContext('2d');
 
@@ -394,6 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastY = 0;
   let currentColor = '#70e0ff';
 
+  // Desktop Mouse Events
   window.addEventListener('mousedown', (e) => {
     isDragging = true;
     lastX = e.clientX;
@@ -414,6 +415,34 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   window.addEventListener('mouseup', () => {
+    isDragging = false;
+  });
+
+  // Mobile Touch Events
+  window.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches[0]) {
+      isDragging = true;
+      lastX = e.touches[0].clientX;
+      lastY = e.touches[0].clientY;
+      playThwipSound();
+      triggerSpiderSensePulse(lastX, lastY);
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!isDragging || !e.touches || !e.touches[0]) return;
+    const tx = e.touches[0].clientX;
+    const ty = e.touches[0].clientY;
+    const dist = Math.hypot(tx - lastX, ty - lastY);
+    if (dist > 25) {
+      webStrands.push(new WebStrand(lastX, lastY, tx, ty, currentColor));
+      lastX = tx;
+      lastY = ty;
+      playThwipSound();
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => {
     isDragging = false;
   });
 
