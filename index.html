@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>スパイダーマン — PETER PARKER CINEMATIC SHOWCASE</title>
+  <meta name="description" content="An ultra-cinematic interactive experience celebrating Spider-Man." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ════════════ 1. PRELOADER ════════════ -->
+  <div class="loader" id="loader">
+    <div class="loader__inner">
+      <div class="loader__glyph">蜘蛛の糸</div>
+      <div class="loader__bar">
+        <span class="loader__fill" id="loaderFill"></span>
+      </div>
+      <div class="loader__meta">
+        <span>起動中 / INITIALIZING SPIDER-SENSE</span>
+        <span id="loaderPct">00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ 2. AMBIENT ATMOSPHERIC LAYERS ════════════ -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- Ambient Storm Lightning Bolt -->
+  <div class="storm" aria-hidden="true">
+    <div class="storm__flash" id="stormFlash"></div>
+    <svg class="storm__bolt" id="stormBolt" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+      <path id="boltPath" d="" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <path id="boltGlow" d="" fill="none" stroke="#70e0ff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" opacity=".5"/>
+    </svg>
+  </div>
+
+  <!-- Bottom Hem Web Canvas -->
+  <div class="web-hem-bed" aria-hidden="true"></div>
+  <canvas class="web-hem-canvas" id="webHemCanvas" aria-hidden="true"></canvas>
+
+  <canvas id="webCanvas" aria-label="Interactive Web Shooting Canvas"></canvas>
+  <canvas id="spiderSenseCanvas" aria-hidden="true"></canvas>
+  <div class="custom-cursor" id="cursor" aria-hidden="true"><span></span></div>
+
+  <!-- ════════════ 3. FIXED CHROME HEADER ════════════ -->
+  <header class="chrome-header">
+    <a href="#hero" class="chrome__mark">
+      <svg class="chrome__mark-icon" viewBox="0 0 100 100" fill="currentColor">
+        <circle cx="50" cy="45" r="14" />
+        <ellipse cx="50" cy="62" rx="18" ry="22" />
+        <path d="M40 38 Q20 20 10 30 Q25 45 42 45" fill="none" stroke="currentColor" stroke-width="4" />
+        <path d="M60 38 Q80 20 90 30 Q75 45 58 45" fill="none" stroke="currentColor" stroke-width="4" />
+      </svg>
+      <span>PARKER</span>
+    </a>
+    <nav class="chrome__nav">
+      <a href="#eye" data-jp="眼">EYES</a>
+      <a href="#playground" data-jp="術">SHOOTER</a>
+      <a href="#suits" data-jp="衣">SUITS</a>
+      <a href="#powers" data-jp="能">POWERS</a>
+      <a href="#origin" data-jp="史">ORIGIN</a>
+      <a href="#rogues" data-jp="敵">ROGUES</a>
+      <button class="chrome__glitch-btn" id="glitchToggle" type="button">👾 GLITCH</button>
+      <button class="chrome__sound-btn" id="soundToggle" type="button" aria-pressed="false">
+        <span>音</span>
+        <span id="soundState">OFF</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Side Rails -->
+  <div class="side-rail side-rail--left" aria-hidden="true">
+    親愛なる隣人 · PETER PARKER · QUEENS, NEW YORK
+  </div>
+  <div class="side-rail side-rail--right" aria-hidden="true">
+    大いなる力には、大いなる責任が伴う
+  </div>
+
+  <!-- ════════════ MAIN CONTENT ════════════ -->
+  <div class="main-wrapper">
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="hero">
+      <img src="hero-action.png" id="heroBgImg" alt="Spider-Man" class="hero__bg-img" />
+      <div class="hero__moon"></div>
+
+      <div class="hero__container">
+        <div class="hero__badge">
+          <span>THWIP!</span> • FRIENDLY NEIGHBORHOOD HERO
+        </div>
+        <div class="hero__title-jp">スパイダーマン</div>
+        <h1 class="hero__title-en">PETER <span>PARKER</span></h1>
+        
+        <div class="hero__quote-box">
+          <p class="hero__quote">"No matter how many times I get hit, I always find a way to get back up. Because the city needs a hero, and that hero is Spider-Man."</p>
+        </div>
+
+        <div class="hero__card-wrapper">
+          <img src="hero-action.png" id="heroCardImg" alt="Classic Spider-Man" class="hero__card-img" />
+        </div>
+
+        <div class="hero__cta-group">
+          <a href="#playground" class="btn-primary">
+            <span>SHOOT WEBS</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <button class="btn-sense" id="btnSenseTrigger" type="button">⚡ SPIDER-SENSE OVERDRIVE</button>
+          <a href="#suits" class="btn-secondary">
+            <span>MULTIVERSE SUITS</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: EYE LENS -->
+    <section class="section" id="eye">
+      <div class="section-header">
+        <span class="section-tag">01 // 眼</span>
+        <span class="section-header__jp">蜘蛛の眼 · 幾何学変形</span>
+        <h2 class="section-header__title">SPIDER LENS EVOLUTION</h2>
+        <div class="section-header__line"></div>
+      </div>
+
+      <div class="eye-showcase">
+        <div class="eye-canvas-wrapper" id="eyeWrapper">
+          <svg class="eye-svg" viewBox="0 0 100 100" fill="currentColor">
+            <path id="eyePath" d="M15 45 C15 25 50 15 85 45 C85 65 50 85 15 45 Z" fill="var(--spider-red-hot)" />
+            <circle id="eyePupil" cx="50" cy="48" r="10" fill="var(--ink)" />
+          </svg>
+          <div class="eye-label" id="eyeLabel">CLASSIC MESH LENS</div>
+        </div>
+
+        <div class="eye-controls">
+          <button class="eye-btn active" data-eye="classic" data-label="CLASSIC MESH LENS">1-CLASSIC LENS</button>
+          <button class="eye-btn" data-eye="battle" data-label="BATTLE FOCUS MODE">2-BATTLE FOCUS</button>
+          <button class="eye-btn" data-eye="sense" data-label="SPIDER-SENSE WARNING">3-SPIDER-SENSE WARN</button>
+          <button class="eye-btn" data-eye="iron" data-label="STARK HUD TARGET LOCK">4-IRON SPIDER HUD</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: WEB PLAYGROUND -->
+    <section class="section web-playground" id="playground">
+      <div class="section-header">
+        <span class="section-tag">02 // 術</span>
+        <span class="section-header__jp">ウェブ・シューター · 蜘蛛の巣</span>
+        <h2 class="section-header__title">INTERACTIVE WEB-SHOOTER</h2>
+        <div class="section-header__line"></div>
+      </div>
+
+      <div class="playground-box">
+        <div class="playground-hint">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+          CLICK & DRAG ANYWHERE TO SHOOT WEBS
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: SUIT VAULT -->
+    <section class="section" id="suits">
+      <div class="section-header">
+        <span class="section-tag">03 // 衣</span>
+        <span class="section-header__jp">スーツの保管庫</span>
+        <h2 class="section-header__title">THE SUIT VAULT</h2>
+        <div class="section-header__line"></div>
+      </div>
+
+      <div class="suit-grid">
+        <div class="suit-card active" data-suit="classic" data-img="suit-classic.png">
+          <div class="suit-card__img-container">
+            <img src="suit-classic.png" alt="Classic Suit" class="suit-card__img" />
+          </div>
+          <div>
+            <div class="suit-card__era">1962 — CLASSIC</div>
+            <h3 class="suit-card__title">RED & BLUE</h3>
+            <p class="suit-card__desc">Hand-stitched classic suit with mesh lenses and high-tensile web fluid.</p>
+          </div>
+          <button class="suit-card__btn">EQUIPPED</button>
+        </div>
+
+        <div class="suit-card" data-suit="symbiote" data-img="suit-symbiote.png">
+          <div class="suit-card__img-container">
+            <img src="suit-symbiote.png" alt="Symbiote Suit" class="suit-card__img" />
+          </div>
+          <div>
+            <div class="suit-card__era">1984 — SYMBIOTE</div>
+            <h3 class="suit-card__title">BLACK SYMBIOTE</h3>
+            <p class="suit-card__desc">Sentient alien suit granting organic webbing & raw strength.</p>
+          </div>
+          <button class="suit-card__btn">EQUIP SUIT</button>
+        </div>
+
+        <div class="suit-card" data-suit="iron" data-img="suit-iron.png">
+          <div class="suit-card__img-container">
+            <img src="suit-iron.png" alt="Iron Spider" class="suit-card__img" />
+          </div>
+          <div>
+            <div class="suit-card__era">2006 — NANOTECH</div>
+            <h3 class="suit-card__title">IRON SPIDER</h3>
+            <p class="suit-card__desc">Stark nanotech armor with golden mechanical pincers.</p>
+          </div>
+          <button class="suit-card__btn">EQUIP SUIT</button>
+        </div>
+
+        <div class="suit-card" data-suit="miles" data-img="suit-miles.png">
+          <div class="suit-card__img-container">
+            <img src="suit-miles.png" alt="Miles Morales" class="suit-card__img" />
+          </div>
+          <div>
+            <div class="suit-card__era">2011 — SPIDER-VERSE</div>
+            <h3 class="suit-card__title">MILES MORALES</h3>
+            <p class="suit-card__desc">Brooklyn suit armed with bio-electric Venom Blasts.</p>
+          </div>
+          <button class="suit-card__btn">EQUIP SUIT</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: SPIDER POWERS -->
+    <section class="section" id="powers">
+      <div class="section-header">
+        <span class="section-tag">04 // 能</span>
+        <span class="section-header__jp">能力・能力値</span>
+        <h2 class="section-header__title">SPIDER ABILITIES</h2>
+        <div class="section-header__line"></div>
+      </div>
+
+      <div class="powers-grid">
+        <div class="power-card">
+          <div class="power-card__img-container">
+            <img src="power-sense.jpg" alt="Spider-Sense Precognition" class="power-card__img" />
+          </div>
+          <span class="power-card__num">01</span>
+          <h3 class="power-card__title">SPIDER-SENSE</h3>
+          <p class="power-card__desc">A clairvoyant precognitive danger sense at the base of Peter's skull, warning him of immediate threats split-seconds before they happen.</p>
+        </div>
+
+        <div class="power-card">
+          <div class="power-card__img-container">
+            <img src="power-web.jpg" alt="Web-Slinging Action" class="power-card__img" />
+          </div>
+          <span class="power-card__num">02</span>
+          <h3 class="power-card__title">WEB-SLINGING</h3>
+          <p class="power-card__desc">Custom synthesized chemical webbing with high tensile strength, allowing aerial swinging across NYC skyscrapers at high velocities.</p>
+        </div>
+
+        <div class="power-card">
+          <div class="power-card__img-container">
+            <img src="power-wall.jpg" alt="Wall-Crawling Skyscraper" class="power-card__img" />
+          </div>
+          <span class="power-card__num">03</span>
+          <h3 class="power-card__title">WALL-CRAWLING</h3>
+          <p class="power-card__desc">Bio-magnetic electrostatic force allowing Peter's hands and feet to adhere to any surface, scaling vertical glass towers with ease.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: ORIGIN & LORE -->
+    <section class="section" id="origin">
+      <div class="section-header">
+        <span class="section-tag">05 // 史</span>
+        <span class="section-header__jp">大いなる力 · 宿命</span>
+        <h2 class="section-header__title">ORIGIN & SACRIFICE</h2>
+        <div class="section-header__line"></div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item timeline-item--left">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-jp">放射能の蜘蛛</div>
+            <div class="timeline-year">1962 — MIDTOWN HIGH</div>
+            <h3 class="timeline-title">The Radioactive Bite</h3>
+            <p class="timeline-text">High school science prodigy Peter Parker is bitten by an irradiated spider at a public exhibit, granting him miraculous arachnid powers.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item timeline-item--right">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-jp">おじさんの遺言</div>
+            <div class="timeline-year">THE TRAGEDY</div>
+            <h3 class="timeline-title">Uncle Ben's Legacy</h3>
+            <p class="timeline-text">A moment of selfish indifference leads to the murder of his beloved Uncle Ben. Peter learns the eternal truth: "With Great Power Comes Great Responsibility."</p>
+          </div>
+        </div>
+
+        <div class="timeline-item timeline-item--left">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-jp">ニューヨークの守護者</div>
+            <div class="timeline-year">DAILY BUGLE</div>
+            <h3 class="timeline-title">Protector of Queens</h3>
+            <p class="timeline-text">Balancing freelance photography for J. Jonah Jameson, college studies, and saving the city as the heroic Spider-Man.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: SINISTER ROGUES -->
+    <section class="section" id="rogues">
+      <div class="section-header">
+        <span class="section-tag">06 // 敵</span>
+        <span class="section-header__jp">宿敵たちの宴</span>
+        <h2 class="section-header__title">SINISTER ROGUES</h2>
+        <div class="section-header__line"></div>
+      </div>
+
+      <div class="rogue-grid">
+        <div class="rogue-card rogue-card--goblin">
+          <div class="rogue-img-container">
+            <img src="rogue-goblin.jpg" alt="Green Goblin" class="rogue-img" />
+          </div>
+          <h3 class="rogue-name">GREEN GOBLIN</h3>
+          <div class="rogue-alias">NORMAN OSBORN</div>
+          <p class="rogue-desc">Peter's arch-nemesis, driven insane by the Goblin formula, wielding pumpkin bombs and glider technology.</p>
+        </div>
+
+        <div class="rogue-card rogue-card--docock">
+          <div class="rogue-img-container">
+            <img src="rogue-docock.jpg" alt="Doc Ock" class="rogue-img" />
+          </div>
+          <h3 class="rogue-name">DOCTOR OCTOPUS</h3>
+          <div class="rogue-alias">OTTO OCTAVIUS</div>
+          <p class="rogue-desc">A brilliant nuclear physicist fused with four telepathically controlled artificial intelligence mechanical arms.</p>
+        </div>
+
+        <div class="rogue-card rogue-card--venom">
+          <div class="rogue-img-container">
+            <img src="rogue-venom.jpg" alt="Venom" class="rogue-img" />
+          </div>
+          <h3 class="rogue-name">VENOM</h3>
+          <div class="rogue-alias">EDDIE BROCK</div>
+          <p class="rogue-desc">Fueled by shared hatred for Spider-Man, Eddie Brock bonds with the rejected alien symbiote to become Peter's dark mirror.</p>
+        </div>
+
+        <div class="rogue-card rogue-card--mysterio">
+          <div class="rogue-img-container">
+            <img src="rogue-mysterio.jpg" alt="Mysterio" class="rogue-img" />
+          </div>
+          <h3 class="rogue-name">MYSTERIO</h3>
+          <div class="rogue-alias">QUENTIN BECK</div>
+          <p class="rogue-desc">Master of special effects, holographic illusions, and psychological warfare who traps Spider-Man in deceptive mindscapes.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: QUOTES -->
+    <section class="section" id="quotes">
+      <div class="quotes-container">
+        <div class="quote-box">
+          <div class="quote-mark">“</div>
+          <p class="quote-text" id="quoteText">
+            No matter how many times I get hit, I always find a way to get back up. Because the city needs a hero, and that hero is Spider-Man.
+          </p>
+          <div class="quote-author">— PETER PARKER</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <svg class="footer-emblem" viewBox="0 0 100 100" fill="currentColor">
+        <circle cx="50" cy="45" r="14" />
+        <ellipse cx="50" cy="62" rx="18" ry="22" />
+        <path d="M40 38 Q20 20 10 30 Q25 45 42 45" fill="none" stroke="currentColor" stroke-width="4" />
+        <path d="M60 38 Q80 20 90 30 Q75 45 58 45" fill="none" stroke="currentColor" stroke-width="4" />
+      </svg>
+      <p class="footer-text">SPIDER-MAN: CLASSIC PETER PARKER EXPERIENCE</p>
+      <p class="footer-text">親愛なる隣人 · QUEENS, NEW YORK</p>
+    </footer>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
